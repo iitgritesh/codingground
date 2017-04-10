@@ -1,0 +1,30 @@
+import java.io.*;
+import java.util.HashMap;
+import java.util.ArrayList;
+class ValidWordsWithoutSpaceRecursive {
+	public static void main (String[] args) {
+		HashMap<String, String> dict = new HashMap<String,String>();
+		//dict.put("I", "I");
+		dict.put("AM", "AM");
+		dict.put("IAM", "IAM");
+		dict.put("Ritesh", "Ritesh");
+		String s = "IAMRitesh";
+		System.out.println(validWords(s,s.length() -1, dict));
+	}
+	
+	private static ArrayList<String> validWords(String s, int i, HashMap<String, String> dict){
+	    if(i < 0) return new ArrayList<String>();
+	    StringBuilder word = new StringBuilder();
+	    for(int j = i; j>=0; j--){
+	        word.insert(0, s.charAt(j));
+	        if(dict.get(word.toString()) != null){
+	          ArrayList<String> validWords = validWords(s, j-1, dict);
+	          if(validWords.size() !=0 || j ==0){
+	            validWords.add(word.toString());
+	            return validWords;
+	          }
+	        }
+	    }
+	    return new ArrayList<String>();
+	}
+}

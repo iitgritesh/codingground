@@ -1,0 +1,94 @@
+import java.io.*;
+import java.util.ArrayList;
+
+class FindSubsequenceDivisibleByN {
+    private static ArrayList<ArrayList<ArrayList<String>>> array = new ArrayList<ArrayList<ArrayList<String>>>();
+	public static void main (String[] args) {
+		String str = "1234";
+        int n = 4;
+        for(int i=0;i<str.length(); i++){
+            ArrayList<ArrayList<String>> array1 = new ArrayList<ArrayList<String>>();
+            array.add(array1);
+            for(int j =0; j< n; j++){
+                ArrayList<String> array2 = new ArrayList<String>();
+                array1.add(array2);
+            }
+        }
+        findSubsequence(array, str, str.length() -1, 0, n);
+        System.out.println(array.get(str.length() -1).get(0));
+	}
+	
+	private static ArrayList<String> appendIntoList(ArrayList<String> list, int digit){
+	    ArrayList<String> list1 = new ArrayList<String>();
+	    for(int i= 0;i<list.size(); i++){
+	        list1.add(list.get(i)+digit);
+	    }
+	    return list1;
+	}
+	private static ArrayList<String> mergeList(ArrayList<String> list, ArrayList<String> list1){
+	    
+	   ArrayList<String> list2 = new ArrayList<String>();
+	   for(int i= 0;i<list.size(); i++){
+	        list2.add(list.get(i));
+	   }
+	   for(int i= 0;i<list1.size(); i++){
+	        list2.add(list1.get(i));
+	   }
+	   return list2;
+	}
+	
+	private static ArrayList<String> addDigitAsString(ArrayList<String> list, int digit){
+	    String s = ""+digit;
+	    ArrayList<String> list1 = new ArrayList<String>();
+	    list1.add(s);
+	    return mergeList(list, list1);
+	}
+	
+private static void findSubsequence(ArrayList<ArrayList<ArrayList<String>>> array, String str, int idx, int rem, int n)
+{
+    
+    // If last character reached
+    int digit = str.charAt(idx) - '0';
+    boolean digitAndRemEquivalent = (digit % n == rem) ? true : false;
+    if(idx == 0){
+        // if digit and rem are equivalent and set is empty
+        // then add digit as the lone member of the set
+        if(digitAndRemEquivalent && array.get(idx).get(rem).size() == 0){
+          array.get(idx).set(rem, addDigitAsString(array.get(idx).get(rem), digit));
+        }
+        return;
+    }
+    
+    ArrayList<String> setWithDigit = new ArrayList<String>();
+    for(int i=0;i<n;i++){
+        // if i could produce the remainder after combining with current
+        // digit then this is a potential candidate and we should calculate findSubsequence 
+        // with idx-1 as digit and i as remainder
+        if((i*10+digit)%n == rem){
+            
+          // if not already calculated, then calculate
+          if(array.get(idx-1).get(i).size() == 0){
+            findSubsequence(array, str, idx-1, i, n);
+            
+          }
+          setWithDigit = mergeList(setWithDigit, appendIntoList(array.get(idx-1).get(i),digit));
+        }
+    }
+    // if set at idx -1 is not calculated then call this method to set
+    if(array.get(idx-1).get(rem).size() == 0 )
+    {
+        findSubsequence(array, str, idx-1, rem, n);
+    }
+    // setWithoutDigit is same as set at idx -1
+    ArrayList<String> setWithoutDigit = array.get(idx-1).get(rem);
+    
+    // combine the set setWithDigit and setWithoutDigit
+    ArrayList<String> combinedSet = mergeList(setWithDigit, setWithoutDigit);
+    
+    // if digit and rem are equivalent then digit itself could also be a solution,
+    // hence add it in set as well
+    if(digitAndRemEquivalent)combinedSet = addDigitAsString(combinedSet, digit);
+    // finally add all three sets and set them
+    array.get(idx).set(rem,  combinedSet);  
+}	
+}

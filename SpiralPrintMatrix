@@ -1,0 +1,27 @@
+package com.amazon.searchapp.render.pagelet.searchresults;
+
+public class SpiralPrintMatrix {
+	public static void main(String[] args) {
+		int array[][] = {{1,2,3,4},{5,6,7,8},{9,10,11,12}};
+		print(array, 0, 3, 0, 4);
+	}
+	
+	private static void print(int array[][], int iStart, int iEnd, int jStart, int jEnd){
+		if(iStart > iEnd || jStart > jEnd) return;
+		for(int i= iStart; i <= iEnd; i++){
+			System.out.println(array[i][jStart]);
+		}
+		for(int j= jStart; j <= jEnd; j++){
+			System.out.println(array[iEnd][j]);
+		}
+		for(int i= iEnd; i >= iStart; i--){
+			System.out.println(array[i][jEnd]);
+		}
+		for(int j= jEnd; j <= jStart; j--){
+			System.out.println(array[iStart][j]);
+		}
+		
+		print(array, iStart+1, iEnd-1, jStart+1, jEnd-1);
+	}
+
+}

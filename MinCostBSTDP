@@ -1,0 +1,53 @@
+import java.io.*;
+
+class MinCostBSTDP {
+    
+	public static void main (String[] args) {
+		double array[] = {0.4,.2,.4};
+		double costArray[][] = new double[array.length][array.length];
+		for(int i=0; i< array.length ; i++){
+		    for(int j=0; j < array.length; j++){
+		        costArray[i][j] = -1.0;
+		    }
+		}
+		System.out.println(findMinCost(0, array.length -1, array, costArray));
+	}
+	
+	private static double findMinCost(int i, int j, double array[], double costArray[][]){
+	    if(i == j) {
+	        if(costArray[i][j] == -1.0)
+	          costArray[i][j] = array[i];
+	          
+	        return costArray[i][j];
+	    }
+	    double min = 0.0;
+	    for(int k = i; k <= j; k++){
+	        if(k == i){
+	            if(costArray[i+1][j] == -1.0)
+	              costArray[i+1][j] = findMinCost(i+1, j, array, costArray);
+	            min = costArray[i+1][j];
+	        }
+	        else if(k == j){
+	            if(costArray[i][j-1] == -1.0)
+	              costArray[i][j-1] = findMinCost(i, j-1, array, costArray);
+	            min = Math.min(min, costArray[i][j-1]);
+	        }
+	        else{
+	            if(costArray[i][k-1] == -1.0)
+	              costArray[i][k-1] = findMinCost(i, k-1, array, costArray);
+	            if(costArray[i][k-1] == -1.0)
+	              costArray[k+1][j] = findMinCost(k+1, j, array, costArray);
+	            min = Math.min(min, costArray[i][k-1] + costArray[k+1][j]);
+	        }
+	    }
+	    return findSum(i,j, array) + min;
+	}
+	
+	private static double findSum(int i, int j, double array[]){
+	    double sum = 0.0;
+	    for(int k =i; k<=j;k++){
+	        sum+=array[k];
+	    }
+	    return sum;
+	}
+}

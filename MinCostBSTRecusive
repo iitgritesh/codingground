@@ -1,0 +1,34 @@
+import java.io.*;
+
+class MinCostBSTRecusive {
+	public static void main (String[] args) {
+		double array[] = {0.4,.2,.4};
+		System.out.println(findMinCost(0, array.length -1, array));
+	}
+	
+	private static double findMinCost(int i, int j, double array[]){
+	    if(i == j) return array[i];
+	    
+	    double min = 0.0;
+	    for(int k = i; k <= j; k++){
+	        if(k == i){
+	            min = findMinCost(i+1, j, array);
+	        }
+	        else if(k == j){
+	            min = Math.min(min, findMinCost(i, j-1, array));
+	        }
+	        else{
+	            min = Math.min(min, findMinCost(i, k-1, array) + findMinCost(k+1, j,array));
+	        }
+	    }
+	    return findSum(i,j, array) + min;
+	}
+	
+	private static double findSum(int i, int j, double array[]){
+	    double sum = 0.0;
+	    for(int k =i; k<=j;k++){
+	        sum+=array[k];
+	    }
+	    return sum;
+	}
+}
